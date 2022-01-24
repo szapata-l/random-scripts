@@ -1,15 +1,20 @@
+
 import json
 
 class BudgetCalculator:
 
     def __init__(self):
         
+        # What do you want to update
         category = input("Paycheck, Deposit, or Withdrawl: ")
         
+        # RATES
         self.savings_rate = .5
         self.investment_rate = .3
         self.spending_rate = .2
         
+        
+        # Opens JSON file and copies content
         with open('totalBudget.json') as budgetFile:
             budget = json.load(budgetFile)
         
@@ -17,16 +22,20 @@ class BudgetCalculator:
         self.totalSpending = budget['Spending Total']
         self.totalInvestings = budget['Investing Total']
         
+        
         if category == "Paycheck":
             
             amount =int(input("Enter Amount: "))
             
+            # Calculates Budget
             new_budget = self.calculateBudget(amount)
         
+            # Updates Totals
             self.totalSavings += new_budget[0]
             self.totalInvestings += new_budget[1]
             self.totalSpending += new_budget[2]
             
+            # Updates JSON file's Totals
             budget['Savings Total'] = round(self.totalSavings,2)
             budget['Spending Total'] = round(self.totalSpending, 2)
             budget['Investing Total'] = round(self.totalInvestings,2)
@@ -34,6 +43,7 @@ class BudgetCalculator:
             with open('totalBudget.json', 'w') as budgetFile1:
                 json.dump(budget, budgetFile1)
         
+            # Prints Results
             self.printTotals()
         
         elif category == "Deposit":
@@ -41,8 +51,10 @@ class BudgetCalculator:
             cat2 = input("Category (savings, investments, or spending): ")
             amount = int(input("Enter Amount: "))
             
+            # Updates Totals corresponding to the amount
             self.deposit(cat2, amount)
             
+            # Updates JSON file's Totals
             budget['Savings Total'] = round(self.totalSavings,2)
             budget['Spending Total'] = round(self.totalSpending, 2)
             budget['Investing Total'] = round(self.totalInvestings,2)
@@ -51,11 +63,13 @@ class BudgetCalculator:
                 json.dump(budget, budgetFile1)
         
         elif category == "Withdrawl":
-            cat3 = input("Category (savings, investments, or spending: ")
+            cat3 = input("Category (savings, investments, or spending): ")
             amount = int(input("Enter Amount: "))
             
+            # Calculates and Updates Totals corresponding the amount
             self.withdrawl(cat3, amount)
             
+            # Updates JSON file's Totals
             budget['Savings Total'] = round(self.totalSavings,2)
             budget['Spending Total'] = round(self.totalSpending, 2)
             budget['Investing Total'] = round(self.totalInvestings,2)
@@ -63,12 +77,11 @@ class BudgetCalculator:
             with open('totalBudget.json', 'w') as budgetFile1:
                 json.dump(budget, budgetFile1)
                 
-            
         else:
             print("INVALID INPUT: Input Paycheck, Deposit, or Withdrawl")
-        
+    
     def calculateBudget(self, paycheck):
-        
+        # Budget Calculator 
         savings = paycheck * self.savings_rate
         investment = paycheck * self.investment_rate
         spending = paycheck * self.spending_rate
@@ -76,6 +89,7 @@ class BudgetCalculator:
         return (savings, investment, spending)
 
     def withdrawl(self, category, amount):
+        # Withdrawls corresponding to category and amount
         
         if category == "savings":
             print(f'Previous Total Savings Amount: {self.totalSavings}')
@@ -96,6 +110,7 @@ class BudgetCalculator:
         
         
     def deposit(self, category, amount):
+        # Deposits corresponding to category and amount
 
         if category == "savings":
             print(f'Previous Total Savings Amount: {self.totalSavings}')
